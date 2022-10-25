@@ -18,9 +18,9 @@ zone "wise.E07.com" {
 
 echo 'options {
 
-        // forwarders {
-        //      0.0.0.0;
-        // };
+        forwarders {
+             10.25.2.2;
+        };
 
         //dnssec-validation auto;
         allow-query{any;};
