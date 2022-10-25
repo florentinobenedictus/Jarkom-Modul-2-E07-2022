@@ -33,13 +33,12 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      wise.E07.com.
-@       IN      A       10.25.2.2       ; # IP BIND
+@       IN      A       10.25.2.2       ; IP BIND
 www     IN      CNAME   wise.E07.com.
-eden    IN      A       10.25.3.3       ; # IP Eden
+eden    IN      A       10.25.3.3       ; IP Eden
 www.eden        IN      CNAME   eden.wise.E07.com.
-ns1     IN      A       10.25.3.2       ; # IP Berlint
-operation       IN      NS       ns1
-#@       IN      AAAA    ::1' > /etc/bind/wise/wise.E07.com
+ns1     IN      A       10.25.3.2       ; IP Berlint
+operation       IN      NS       ns1' > /etc/bind/wise/wise.E07.com
 
 
 
