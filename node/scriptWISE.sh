@@ -37,7 +37,9 @@ $TTL    604800
 www     IN      CNAME   wise.E07.com.
 eden    IN      A       10.25.3.3       ; # IP Eden
 www.eden        IN      CNAME   eden.wise.E07.com.
-@       IN      AAAA    ::1' > /etc/bind/wise/wise.E07.com
+ns1     IN      A       10.25.3.2       ; # IP Berlint
+operation       IN      NS       ns1
+#@       IN      AAAA    ::1' > /etc/bind/wise/wise.E07.com
 
 
 
