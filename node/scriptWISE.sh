@@ -1,7 +1,7 @@
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 
-apt-get update
-apt-get install bind9 -y
+apt-get update &
+apt-get install bind9 -y &
 
 echo 'zone "wise.E07.com" {
     type master;
@@ -33,7 +33,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      wise.E07.com.
-@       IN      A       10.25.2.2       ; IP BIND
+@       IN      A       10.25.3.3       ; IP Eden
 www     IN      CNAME   wise.E07.com.
 eden    IN      A       10.25.3.3       ; IP Eden
 www.eden        IN      CNAME   eden.wise.E07.com.

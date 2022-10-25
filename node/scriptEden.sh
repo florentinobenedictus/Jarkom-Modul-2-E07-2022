@@ -2,22 +2,31 @@ echo 'nameserver 192.168.122.1
 nameserver 10.25.2.2 # IP WISE
 nameserver 10.25.3.2 # IP Berlint' > /etc/resolv.conf
 
-apt-get update
-apt-get install apache2 -y
-apt-get install php -y
-apt-get install wget -y
-apt-get install unzip -y
+apt-get update &
+wait
+apt-get install apache2 -y &
+wait
+apt-get install php -y &
+wait
+apt-get install wget -y &
+wait
+apt-get install unzip -y &
+wait
+apt-get install libapache2-mod-php7.0 -y &
+wait
 
 
 
 cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/wise.E07.com.conf
 
-echo '<VirtualHost *:80>
+echo '<VirtualHost *:8080>
 
-        ServerName wise.E07.com   
+        ServerName wise.E07.com
         ServerAlias www.wise.E07.com
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/wise.E07.com
+
+        Alias "/home" "/var/www/wise.E07.com/index.php/home"
 
         # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
         # error, crit, alert, emerg.
@@ -38,8 +47,27 @@ echo '<VirtualHost *:80>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/sites-available/wise.E07.com.conf
 
-wget --no-check-certificate "https://drive.google.com/uc?export=download&id=1S0XhL9ViYN7TyCj2W66BNEXQD2AAAw2e" -O wise.zip 
-unzip /root/wise.zip -d /var/www
+echo '# If you just change the port or add more ports here, you will likely also
+# have to change the VirtualHost statement in
+# /etc/apache2/sites-enabled/000-default.conf
+
+Listen 80
+Listen 8080
+
+<IfModule ssl_module>
+        Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+        Listen 443
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/ports.conf
+
+wget --no-check-certificate "https://drive.google.com/uc?export=download&id=1S0XhL9ViYN7TyCj2W66BNEXQD2AAAw2e" -O wise.zip &
+wait $!
+unzip /root/wise.zip -d /var/www &
+wait $!
 mv /var/www/wise /var/www/wise.E07.com
 rm wise.zip
 
