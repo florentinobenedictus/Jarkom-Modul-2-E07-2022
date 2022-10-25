@@ -66,6 +66,7 @@ echo 'options {
         directory "/var/cache/bind";
 
         forwarders {
+                10.25.3.2;
                 192.168.122.1;
         };
         
