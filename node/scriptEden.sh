@@ -88,6 +88,11 @@ echo '<VirtualHost *:80>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/eden.wise.E07.com
 
+        <Directory /var/www/eden.wise.E07.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+
         <Directory /var/www/eden.wise.E07.com/public>
                 Options +Indexes
         </Directory>
@@ -134,6 +139,13 @@ echo '<VirtualHost *:15000 *:15500>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/strix.operation.wise.E07.com
 
+        <Directory /var/www/strix.operation.wise.E07.com>
+                AuthType Basic
+                AuthName "Restricted Files"
+                AuthUserFile /etc/apache2/.htpasswd
+                Require valid-user
+        </Directory>
+
         # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
         # error, crit, alert, emerg.
         # It is also possible to configure the loglevel for particular
@@ -154,11 +166,50 @@ echo '<VirtualHost *:15000 *:15500>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/sites-available/strix.operation.wise.E07.com.conf
 
 
+htpasswd -cb /etc/apache2/.htpasswd Twilight opStrix
+
+
+echo '<VirtualHost *:80>
+
+        ServerName http://10.25.3.3
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.E07.com
+
+        Redirect 301 / http://www.wise.E07.com
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+        
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/sites-available/ip.redirect.conf
+
+echo 'RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !=/public/images/eden.png
+RewriteRule (.*eden.*)\.(png|jpg|gif)$ http://eden.wise.E07.com/public/images/eden.png [L,R=301]' > /var/www/eden.wise.E07.com/.htaccess
+
 
 a2dissite 000-default.conf 
 a2ensite wise.E07.com.conf
 a2ensite eden.wise.E07.com.conf
 a2ensite strix.operation.wise.E07.com.conf
+a2ensite ip.redirect.conf
+
+a2enmod rewrite
+
 service apache2 restart
 
 
