@@ -3,7 +3,9 @@ echo '#nameserver 10.25.2.2 # IP WISE
 nameserver 192.168.122.1' > /etc/resolv.conf
 
 apt-get update &
+wait
 apt-get install bind9 -y &
+wait
 
 echo 'zone "operation.wise.E07.com" {
     type master;

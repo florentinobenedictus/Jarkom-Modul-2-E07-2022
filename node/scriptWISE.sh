@@ -1,7 +1,9 @@
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 
 apt-get update &
+wait
 apt-get install bind9 -y &
+wait
 
 echo 'zone "wise.E07.com" {
     type master;
