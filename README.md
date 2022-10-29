@@ -650,7 +650,7 @@ a2enmod rewrite
 1. Import Project GNS3
 2. Start project
 3. Restart seluruh node
-4. `bash ./script.sh` pada seluruh node dimulai dari router (agar node lainnya dapat terhubung ke internet)
+4. `bash /root/script.sh` pada seluruh node dimulai dari router (agar node lainnya dapat terhubung ke internet)
 5. Seluruh fungsionalitas sudah dapat digunakan
 
 ## Pembagian Tugas
