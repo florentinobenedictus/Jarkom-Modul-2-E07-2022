@@ -10,7 +10,7 @@
 #### [Script Node](node)
 #### [Script Router](router)
 #### [Resources Google Drive](zip)
-#### [Soal](#soal)
+#### [Soal](soal)
 - [Soal 1](#soal-1)
 - [Soal 2](#soal-2)
 - [Soal 3](#soal-3)
@@ -28,6 +28,7 @@
 - [Soal 15](#soal-15)
 - [Soal 16](#soal-16)
 - [Soal 17](#soal-17)
+#### [Menjalankan Script](#menjalankan-script-1)
 #### [Pembagian Tugas](#pembagian-tugas-1)
 #### [Revisi](#revisi-1)
 #### [Kendala](#kendala-1)
@@ -644,6 +645,13 @@ a2enmod rewrite
 5. `lynx www.eden.wise.E07.com/public/images` pada client, lalu tes redirection ketika memilih suatu file.
 ![Untitled](https://user-images.githubusercontent.com/85059763/198829447-24db0c1e-a192-435a-9502-1647b4378b10.png)
 ![Untitled](https://user-images.githubusercontent.com/85059763/198829496-caf02129-5f62-44a2-9b00-e0486f61b893.png)
+
+## Menjalankan Script
+1. Import Project GNS3
+2. Start project
+3. Restart seluruh node
+4. `bash ./script.sh` pada seluruh node dimulai dari router (agar node lainnya dapat terhubung ke internet)
+5. Seluruh fungsionalitas sudah dapat digunakan
 
 ## Pembagian Tugas
 | Nama                        | Nomor      |
