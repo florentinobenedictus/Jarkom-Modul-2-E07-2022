@@ -299,7 +299,7 @@ Akan tetapi, pada folder /public, Loid ingin hanya dapat melakukan directory lis
         Options +Indexes
 </Directory>
 ```
-Sehingga konfigurasinya menjadi
+Sehingga konfigurasinya menjadi:
 ```
 <VirtualHost *:80>
         ServerName eden.wise.E07.com
@@ -465,16 +465,156 @@ Listen 15500
 ```
 a2ensite strix.operation.wise.E07.com.conf
 ```
-5. `lynx www.strix.operation.wise.E07.com:15000` atau lynx `www.strix.operation.wise.E07.com:15500` pada client
+5. Restart apache2 pada Eden dengan `service apache2 restart`
+6. `lynx www.strix.operation.wise.E07.com:15000` atau lynx `www.strix.operation.wise.E07.com:15500` pada client
 ![Untitled](https://user-images.githubusercontent.com/85059763/198828163-6f114773-292b-4639-9dc8-0b0c1c2f6bcd.png)
 
 ## Soal 15
 dengan autentikasi username Twilight dan password opStrix dan file di /var/www/strix.operation.wise.yyy
 ### Jawaban
-
+1. Tambahkan tag directory pada `/etc/apache2/sites-available/strix.operation.wise.E07.com.conf`
+```
+<Directory /var/www/strix.operation.wise.E07.com>
+        AuthType Basic
+        AuthName "Restricted Files"
+        AuthUserFile /etc/apache2/.htpasswd
+        Require valid-user
+</Directory>
+```
+Sehingga konfigurasinya menjadi:
+```
+<VirtualHost *:15000 *:15500>
+        ServerName strix.operation.wise.E07.com
+        ServerAlias www.strix.operation.wise.E07.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/strix.operation.wise.E07.com
+	
+        <Directory /var/www/strix.operation.wise.E07.com>
+                AuthType Basic
+                AuthName "Restricted Files"
+                AuthUserFile /etc/apache2/.htpasswd
+                Require valid-user
+        </Directory>
+	
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+        
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+2. `htpasswd -cb /etc/apache2/.htpasswd Twilight opStrix` pada Eden untuk konfigurasi autentikasi username Twilight dan password opStrix
+3. Restart apache2 pada Eden dengan `service apache2 restart`
+4. `lynx www.strix.operation.wise.E07.com:15000` atau lynx `www.strix.operation.wise.E07.com:15500` pada client, maka sekarang client akan diminta memasukkan username dan password yang sesuai
+![Untitled](https://user-images.githubusercontent.com/85059763/198828530-e60bb8b4-96be-4368-a7d3-dd2a773e1ac6.png)
 
 ## Soal 16
+dan setiap kali mengakses IP Eden akan dialihkan secara otomatis ke www.wise.yyy.com
 ### Jawaban
+1. Buat konfigurasi `/etc/apache2/sites-available/ip.redirect.conf` pada Eden dengan `Redirect 301 / http://www.wise.E07.com`
+```
+<VirtualHost *:80>
+        ServerName http://10.25.3.3
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.E07.com
+	
+        Redirect 301 / http://www.wise.E07.com
+	
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+        
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+2. Enable konfigurasi `a2ensite ip.redirect.conf` pada Eden
+3. Restart apache2 pada Eden dengan `service apache2 restart`
+4. `hostname -I` pada Eden untuk mengetahui IP Eden <br>
+![Untitled](https://user-images.githubusercontent.com/85059763/198828676-8a8f806d-648d-4eb7-9a2e-017d92cbf7d4.png) <br>
+5. `lynx 10.25.3.3` pada client, maka akan diarahkan ke `www.wise.E07.com`
+![Untitled](https://user-images.githubusercontent.com/85059763/198828732-30ee0ae0-81f8-4296-8959-61e0c4077f20.png)
 
 ## Soal 17
+Karena website www.eden.wise.yyy.com semakin banyak pengunjung dan banyak modifikasi sehingga banyak gambar-gambar yang random, maka Loid ingin mengubah request gambar yang memiliki substring “eden” akan diarahkan menuju eden.png. Bantulah Agent Twilight dan Organisasi WISE menjaga perdamaian!
 ### Jawaban
+1. Tambahkan tag directory pada `/etc/apache2/sites-available/eden.wise.E07.com.conf`
+```
+<Directory /var/www/eden.wise.E07.com>
+        Options +FollowSymLinks -Multiviews
+        AllowOverride All
+</Directory>
+```
+Sehingga konfigurasinya menjadi:
+```
+<VirtualHost *:80>
+        ServerName eden.wise.E07.com
+        ServerAlias www.eden.wise.E07.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.E07.com
+	
+        <Directory /var/www/eden.wise.E07.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+	
+        <Directory /var/www/eden.wise.E07.com/public>
+                Options +Indexes
+        </Directory>
+	
+        ErrorDocument 404 /error/404.html
+	
+        Alias "/js" "/var/www/eden.wise.E07.com/public/js"
+	
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
+        
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+2. Edit isi `/var/www/eden.wise.E07.com/.htaccess` sehingga akan mengecek regular expression dan akan mengarahkan gambar dengan substring eden menuju `eden.wise.E07.com/public/images/eden.png`. `!=/public/images/eden.png` digunakan agar ketika mengakses file `eden.wise.E07.com/public/images/eden.png` sendiri maka tidak akan diredirect. `!=` dan absolute path digunakan karena kemungkinan adanya file dengan nama yang sama (eden.png) tetapi diletakkan pada directory lain tidak diredirect ke `eden.png` yang sebenarnya.
+```
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !=/public/images/eden.png
+RewriteRule (.*eden.*)\.(png|jpg|gif)$ http://eden.wise.E07.com/public/images/eden.png [L,R=301]
+```
+3. Aktifkan modul rewrite pada Eden
+```
+a2enmod rewrite
+```
+4. Restart apache2 pada Eden dengan `service apache2 restart`
+5. `lynx www.eden.wise.E07.com/public/images` pada client, lalu tes redirection ketika memilih suatu file.
+![Untitled](https://user-images.githubusercontent.com/85059763/198829447-24db0c1e-a192-435a-9502-1647b4378b10.png)
+![Untitled](https://user-images.githubusercontent.com/85059763/198829496-caf02129-5f62-44a2-9b00-e0486f61b893.png)
+
